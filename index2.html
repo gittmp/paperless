@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<html>
+    <head>
+        <style>
+            .container {
+                position: relative;
+                text-align: center;
+                color: black;
+                width: 40%;
+                height: auto;
+            }
+            
+            .image {
+                opacity: 0.6;
+                border-radius: 8px;
+                display: block;
+                width: 100%;
+                height: auto;
+                transition: .5s ease;
+                backface-visibility: hidden;
+            }
+
+            .centered {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            
+            .middle {
+                transition: .5s ease;
+                opacity: 0;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                text-align: center;
+            }
+            
+            .container:hover .image {
+                opacity: 0.4;
+            }
+            
+            .container:hover .middle {
+                opacity: 1;
+            }
+            
+            .text {
+                background-color: rgb(163, 163, 194);
+                border-radius: 8px;
+                color: black;
+                font-size: 16px;
+                padding: 16px 32px;
+            }
+        </style>
+    </head>
+    <body>
+        
+        <div class="container">
+        <img src="https://ichef.bbci.co.uk/news/1024/branded_news/05A6/production/_112664410_mediaitem112664409.jpg" alt="Kier Starmer" class="image" style="width:100%">
+        <div class="centered">Labour leader Starmer's political distancing</div>
+        <div class="middle">
+            <div class="text">There is a change in tone from the opposition leader towards Boris Johnson, but what is his plan?</div>
+        </div>
+        </div>
+            
+    </body>
+</html>
