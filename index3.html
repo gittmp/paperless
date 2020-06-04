@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Khula">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Georgia">
+      <script src = "index.js">
+      </script>
+      <script>
+        window.onload = loadPage();
+      </script>
+
+      <style>
+        h1 {
+          font-family: Georgia;
+          text-align: center;
+          font-weight: bolder;
+        }
+
+        div.articles {
+          border: 1px solid #ccc;
+          border-radius: 8px;
+        }
+
+        div.articles:hover {
+          border: 1px solid #777;
+          opacity: 0.8;
+        }
+
+        div.articles img {
+          width: 100%;
+          height: auto;
+          border-radius: 7px;
+          opacity: 0.8;
+        }
+
+        div.desc {
+          padding: 5px;
+          text-align: center;
+          font-size: 12px;
+          font-family: "Khula";
+          word-wrap: break-word;
+          word-break: keep-all;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+
+        .responsive {
+          padding: 6px 6px;
+          float: left;
+          width: 24.99999%;
+        }
+
+        @media only screen and (max-width: 700px) {
+          .responsive {
+            width: 49.99999%;
+            margin: 6px 6px;
+          }
+        }
+
+        @media only screen and (max-width: 500px) {
+          .responsive {
+            width: 100%;
+          }
+        }
+
+      </style>
+  </head>
+  <body>
+
+      <h1>Paperless News</h1>
+
+      <div id="content"></div>
+
+  </body>
+</html>
