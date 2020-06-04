@@ -3,95 +3,14 @@
     <head>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Khula">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Georgia">
+        <link rel="stylesheet" href="style.css">
         <script src="index.js"></script>
 
         <script>
-            window.onload = loadPage();
+            window.onload = loadPage(20, "gb");
         </script>
 
-        <style>
-
-            * {
-                box-sizing: border-box;
-            }
-
-            a { 
-                text-decoration: none; 
-                color: black;
-            }
-            
-            body {
-                margin: 20px;
-                font-family: Khula;
-            }
-            
-            .header {
-                text-align: center;
-                font-family: Georgia;
-                padding: 32px;
-            }
-            
-            .row {
-                display: flex;
-                flex-wrap: wrap;
-            }
-            
-            /* Create four equal columns that sits next to each other */
-            .column {
-                flex: 25%;
-                max-width: 25%;
-            }
-            
-            .column img {
-                vertical-align: middle;
-            }
-            
-            /* Responsive layout - makes a two column-layout instead of four columns */
-            @media (max-width: 800px) {
-                .column {
-                    flex: 50%;
-                    max-width: 50%;
-                }
-            }
-            
-            /* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
-            @media (max-width: 600px) {
-                .column {
-                    flex: 100%;
-                    max-width: 100%;
-                }
-            }
-
-            div.articles {
-                border: 1px solid #ccc;
-                border-radius: 8px;
-                margin: 10px;
-                margin-bottom: 20px;
-            }
-
-            div.articles:hover {
-                border: 1px solid #777;
-                opacity: 0.8;
-            }
-
-            div.articles img {
-                width: 100%;
-                height: auto;
-                border-radius: 7px;
-                opacity: 0.85;
-            }
-
-            div.desc {
-                padding: 5px;
-                text-align: center;
-                font-size: 12px;
-                font-family: "Khula";
-                word-wrap: break-word;
-                word-break: keep-all;
-            }
-
-        </style>
-
+        <title>Paperless News</title>
     </head>
 
     <body>
@@ -104,104 +23,6 @@
         <!-- News Grid -->
 
         <div id="content"></div>
-
-        <!-- <div class="row"> 
-            <div class="column">
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://ichef.bbci.co.uk/news/1024/branded_news/05A6/production/_112664410_mediaitem112664409.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Labour leader Starmer's political distancing</div>
-                        <div class="desc">There is a change in tone from the opposition leader towards Boris Johnson, but what is his plan?</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://e3.365dm.com/20/06/1600x900/skynews-madeleine-mccann-german-paedophile_5005525.jpg?20200604073923" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Madeleine McCann: Suspect is named Christian B - What we know about jailed German</div>
-                        <div class="desc">UK and German police appealed for information on Wednesday about a convicted paedophile serving time in jail for sex offences.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://i2-prod.mirror.co.uk/incoming/article22139210.ece/ALTERNATES/s1200/0_kiss-my-shoes.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Black boy taunted by white youths shouting 'kiss my shoes' as two teens arrested</div>
-                        <div class="desc">Snapchat video, which has been viewed more than 1.5 million times on Twitter also, shows a white teenage boy and a white teenage girl repeatedly shouting at the black boy to kneel and kiss their shoes</div>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="column">
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://m.files.bbci.co.uk/modules/bbc-morph-news-waf-page-meta/4.1.2/bbc_news_logo.png" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">George Floyd death: Minneapolis set for his memorial - BBC News</div>
-                        <div class="desc">The event will commemorate the man whose death in US police custody has sparked huge protests.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://i.dailymail.co.uk/1s/2020/06/04/18/29229128-0-image-a-7_1591290561051.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">New Madeleine McCann suspect discussed her in an online chatroom</div>
-                        <div class="desc">The suspect, a 43-year-old German drifter with a long history of sex crimes against women and children, was living in the Algarve resort Maddie vanished from 13 years ago.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://media11.s-nbcnews.com/j/MSNBC/Components/Video/202006/n_mj_gess_200604_1920x1080.nbcnews-fp-1200-630.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">'Trump is showing us what he thinks power looks like and sounds like'</div>
-                        <div class="desc">Former CIA analyst Gail Helt along with writers Masha Gessen and Anne Applebaum discuss the president's threat to use active duty U.S. troops to combat protesters and the violent clearing of protesters for a photo op this week.</div>
-                    </a>
-                </div>
-            </div> 
-            
-            <div class="column">
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://i2-prod.dailystar.co.uk/incoming/article21885570.ece/ALTERNATES/s615b/0_Diego-Costa.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Atletico Madrid star Diego Costa sentenced to six months in prison for tax fraud</div>
-                        <div class="desc">Atletico Madrid ace Diego Costa has been sentenced to six months in prison for tax fraud in Spain - but the ex-Chelsea ace will pay €36,000 fine to avoid any jail time</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://ichef.bbci.co.uk/images/ic/1024x576/p08g2p26.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Face coverings to be mandatory on public transport</div>
-                        <div class="desc">From 15 June, people in England could be fined for not wearing a covering, the transport secretary says.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://cdn.cnn.com/cnnnext/dam/assets/200505115454-01-facebook-headquarters-1023-super-tease.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Facebook will start labeling pages and posts from state-controlled media</div>
-                        <div class="desc">Facebook will start labeling the pages, posts and advertisements of state-controlled media outlets, the company announced Thursday.</div>
-                    </a>
-                </div>
-            </div>
-            
-            <div class="column">
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://ichef.bbci.co.uk/news/1024/branded_news/1826/production/_112528160_1500-gettyimages-684062806.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Coronavirus: Which schools are reopening for pupils?</div>
-                        <div class="desc">Some primary schools in England have reopened for some children - with Wales announcing a return for all ages of pupils at the end of June.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://e3.365dm.com/20/06/1600x900/london-george-floyd-protest_5005234.jpg?20200603181825" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">George Floyd death: Scuffles break out at London protest</div>
-                        <div class="desc">Crowds confronted police in central London amid protests over the death of George Floyd.</div>
-                    </a>
-                </div>
-                <div class="articles"> 
-                    <a target="_blank" href="https://www.bbc.co.uk">
-                        <img src="https://static.standard.co.uk/s3fs-public/thumbnails/image/2020/06/04/13/0406HongKongTiananmenSquare-8.jpg" alt="article1image" class="image" width="600" height="400">
-                        <div class="desc" style="font-weight: bold; font-size: 14px;">Thousands in Hong Kong defy police ban to gather at Tiananmen Square</div>
-                        <div class="desc">Thousands of Hong Kong residents today defied the region’s Covid-19 ban on gatherings and held mass vigils to mark the 1989 Tiananmen Square crackdown. Demonstrators all over the city held their phones or lit candles in the air in memory of those who died in the incident - a violent anti-democracy action on June 4 1989, which human rights groups and witnesses claim saw hundreds if not thousands lose their lives.</div>
-                    </a>
-                </div>
-            </div>
-        </div> -->
 
     </body>
 </html>

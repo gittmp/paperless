@@ -1,0 +1,78 @@
+* {
+    box-sizing: border-box;
+}
+
+a { 
+    text-decoration: none; 
+    color: black;
+}
+
+body {
+    margin: 20px;
+    font-family: Khula;
+}
+
+.header {
+    text-align: center;
+    font-family: Georgia;
+    padding: 32px;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Create four equal columns that sits next to each other */
+.column {
+    flex: 25%;
+    max-width: 25%;
+}
+
+.column img {
+    vertical-align: middle;
+}
+
+/* Responsive layout - makes a two column-layout instead of four columns */
+@media (max-width: 800px) {
+    .column {
+        flex: 50%;
+        max-width: 50%;
+    }
+}
+
+/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    .column {
+        flex: 100%;
+        max-width: 100%;
+    }
+}
+
+div.articles {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    margin: 10px;
+    margin-bottom: 20px;
+}
+
+div.articles:hover {
+    border: 1px solid #777;
+    opacity: 0.8;
+}
+
+div.articles img {
+    width: 100%;
+    height: auto;
+    border-radius: 7px;
+    opacity: 0.85;
+}
+
+div.desc {
+    padding: 5px;
+    text-align: center;
+    font-size: 12px;
+    font-family: "Khula";
+    word-wrap: break-word;
+    word-break: keep-all;
+}
