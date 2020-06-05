@@ -12,6 +12,11 @@ body {
     font-family: Khula;
 }
 
+pre {
+    font-size: smaller;
+    font-family: Georgia;
+}
+
 .header {
     text-align: center;
     font-family: Georgia;
