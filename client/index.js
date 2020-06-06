@@ -186,6 +186,6 @@ async function loadPage(size, country, source){
     }
 
     document.getElementById("content").innerHTML = html;    
-    document.getElementById("head").innerHTML += '<pre>Updated:  ' + time + '  ' + date + '</pre>';
+    document.getElementById("head").innerHTML += '<p style="font-size: smaller;">Updated:  ' + time + '  ' + date + '</p>';
 
 }
