@@ -8,15 +8,20 @@ a {
 }
 
 body {
-    margin: 20px;
+    margin: 30px;
     font-family: Khula;
 }
 
 .header {
     position: relative;
-    text-align: center;
+    /* text-align: center; */
     font-family: Georgia;
-    padding: 32px;
+    padding: 30px;
+}
+
+.head-cols {
+    display: grid;
+    grid-template-columns: auto 20%;
 }
 
 .row {

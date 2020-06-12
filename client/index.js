@@ -44,8 +44,12 @@ async function getPreview(obj, source){
     let news = {};
 
     if(source == 0){
-
         news['source'] = obj.source.name;
+
+        if (news['source'].includes("Theguardian")){
+            news['source'] = "The Guardian";
+        }
+
         news['title'] = obj.title;
         news['desc'] = obj.description;
         news['url'] = obj.url;
@@ -77,7 +81,27 @@ async function getPreview(obj, source){
 
     return news;
 }
+/* 
+async function getTwitterTrends(){
 
+    let placeID = 1; //Global WOEID
+
+    let url = '/twitterTrends?placeID=' + placeID;
+    
+    let result = await fetch(url, {
+        method: 'GET'
+        })
+        // .then(response => response.json())
+        .catch((error) => {
+            console.error('Error:', error);
+            return error;
+    });
+
+    console.log(result);
+
+    return result;
+} 
+*/
 const topicList = [
     "World",
     "Nation",
@@ -113,6 +137,7 @@ const biasChart = {
     "The Times": 'Slight Right',
     "The Sunday Times": 'Slight Right',
     "The Telegraph": 'Right',
+    "Telegraph.co.uk": 'Right',
     "The Sun": 'Right',
     "The Daily Express": 'Right',
     "Express": 'Right',
