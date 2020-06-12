@@ -81,7 +81,7 @@ async function getPreview(obj, source){
 
     return news;
 }
-/* 
+
 async function getTwitterTrends(){
 
     let placeID = 1; //Global WOEID
@@ -101,7 +101,7 @@ async function getTwitterTrends(){
 
     return result;
 } 
-*/
+
 const topicList = [
     "World",
     "Nation",
@@ -144,6 +144,11 @@ const biasChart = {
     "Express.co.uk": 'Right',
     "Daily Mail": 'Far Right',
     "The Daily Mail": 'Far Right',
+}
+
+async function toggle(toggleID){
+    let toggle = document.getElementById('toggle' + toggleID);
+    console.log('toggle' + toggleID + ': ' + toggle.checked);
 }
 
 async function loadPage(size, country, source){

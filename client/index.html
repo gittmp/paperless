@@ -23,12 +23,22 @@
             </div>
             <div class="header">
                 <h1>Settings</h1>
-                <p>This<br>is<br>where<br>things get set</p>
+                <div class="settings-cols">
+                    <label class="switch">
+                        <input type="checkbox" id="toggle1" onclick="toggle(1);" checked>
+                        <span class="slider"></span>
+                    </label>
+                    BBC News
+                    <label class="switch">
+                        <input type="checkbox" id="toggle2" onclick="toggle(2);">
+                        <span class="slider"></span>
+                    </label>
+                    Sky News
+                </div>
             </div>
         </div>
     
         <!-- News Grid -->
-
         <div id="content"></div>
 
     </body>
