@@ -7,7 +7,7 @@
         <script src="index.js"></script>
 
         <script>
-            window.onload = loadPage(15, "gb", 0);
+            window.onload = loadPage(25, 0, '');
         </script>
 
         <title>Paperless News</title>
@@ -20,20 +20,28 @@
             <div class="header" id="head">
                 <h1>Paperless News</h1>
                 <p>News from sources across the world wide web, in one place, just for you</p>
+                <div id="update-time"></div>
             </div>
             <div class="header">
                 <h1>Settings</h1>
                 <div class="settings-cols">
                     <label class="switch">
-                        <input type="checkbox" id="toggle1" onclick="toggle(1);" checked>
+                        <input type="checkbox" id="toggle0" onclick="toggle();" checked>
                         <span class="slider"></span>
                     </label>
                     BBC News
+
                     <label class="switch">
-                        <input type="checkbox" id="toggle2" onclick="toggle(2);">
+                        <input type="checkbox" id="toggle1" onclick="toggle();" checked>
                         <span class="slider"></span>
                     </label>
                     Sky News
+
+                    <label class="switch">
+                        <input type="checkbox" id="toggle2" onclick="toggle();" checked>
+                        <span class="slider"></span>
+                    </label>
+                    The Mirror
                 </div>
             </div>
         </div>

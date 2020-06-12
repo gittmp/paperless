@@ -1,6 +1,67 @@
-async function getTopNews(size, country){
+const LIMIT = 25
 
-    let url = 'https://newsapi.org/v2/top-headlines?apiKey=cb527766d5474d5ebcccd51023d032bf&country=' + country + '&pagesize=' + String(size);
+const sourceList = {
+    'toggle0': "bbc.co.uk,",
+    'toggle1': "sky.com,",
+    'toggle2': "mirror.co.uk,",
+}
+
+const topicList = [
+    "World",
+    "Nation",
+    "Business",
+    "Technology",
+    "Entertainment",
+    "Sports",
+    "Science",
+    "Health"
+]
+
+const biasChart = {
+    "HuffPost": 'Far Left',
+    "HuffPost UK": 'Far Left',
+    "Huffington Post": 'Far Left',
+    "Morning Star": 'Far Left',
+    "CNN": 'Left',
+    "The Guardian": 'Left',
+    "The Mirror": 'Left',
+    "Daily Mirror": 'Left',
+    "Mirror Online": 'Left',
+    "The Star": 'Left',
+    "Metro.co.uk": 'Left',
+    "Metro": 'Left',
+    "The Independent": 'Left',
+    "Wales Online": 'Left',
+    "The Observer": 'Slight Left',
+    "Sky News": 'Center',
+    "Sky.com": 'Center',
+    "The Financial Times": 'Center',
+    "Financial Times": 'Center',
+    "BBC News": 'Center',
+    "The Times": 'Slight Right',
+    "The Sunday Times": 'Slight Right',
+    "The Telegraph": 'Right',
+    "Telegraph.co.uk": 'Right',
+    "The Sun": 'Right',
+    "The Daily Express": 'Right',
+    "Express": 'Right',
+    "Express.co.uk": 'Right',
+    "Daily Mail": 'Far Right',
+    "The Daily Mail": 'Far Right',
+}
+
+async function getTopNews(size, sources){
+
+    let country = 'gb';
+    let url = '';
+
+    if(sources.length > 0){
+        url = 'https://newsapi.org/v2/everything?domains=' + sources + '&apiKey=cb527766d5474d5ebcccd51023d032bf&pagesize=' + String(size);
+    } else {
+        url = 'https://newsapi.org/v2/top-headlines?apiKey=cb527766d5474d5ebcccd51023d032bf&country=' + country + '&pagesize=' + String(size);
+    }
+
+    console.log(url);
 
     let result = await fetch(url, {
         method: 'GET'
@@ -14,8 +75,9 @@ async function getTopNews(size, country){
     return result;
 }
 
-async function getTopNews2(limit, country){ //%20OR%20title%3AUK
-    let url = 'https://api.newsriver.io/v2/search?query=language%3AEN%20AND%20(website.domainName%3Abbc.co.uk)&sortBy=discoverDate&sortOrder=DESC&limit=' + String(limit);
+async function getTopNews2(limit){ //website.domainName%3A.co.uk
+    let sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
+    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20AND%20' + sources + '&sortBy=discoverDate&sortOrder=DESC&limit=' + String(limit);
     const token = 'sBBqsGXiYgF0Db5OV5tAwypVCIPW_sVl7GCQx0RUezHZZuTSmzmITA0VmFNNAWN0n2pHZrSf1gT2PUujH1YaQA'
     
     let result = await fetch(url, {
@@ -44,12 +106,7 @@ async function getPreview(obj, source){
     let news = {};
 
     if(source == 0){
-        news['source'] = obj.source.name;
-
-        if (news['source'].includes("Theguardian")){
-            news['source'] = "The Guardian";
-        }
-
+        news['source'] = obj.source.name.replace(".com", "");
         news['title'] = obj.title;
         news['desc'] = obj.description;
         news['url'] = obj.url;
@@ -102,59 +159,10 @@ async function getTwitterTrends(){
     return result;
 } 
 
-const topicList = [
-    "World",
-    "Nation",
-    "Business",
-    "Technology",
-    "Entertainment",
-    "Sports",
-    "Science",
-    "Health"
-]
-
-const biasChart = {
-    "HuffPost": 'Far Left',
-    "HuffPost UK": 'Far Left',
-    "Huffington Post": 'Far Left',
-    "Morning Star": 'Far Left',
-    "CNN": 'Left',
-    "The Guardian": 'Left',
-    "The Mirror": 'Left',
-    "Daily Mirror": 'Left',
-    "Mirror Online": 'Left',
-    "The Star": 'Left',
-    "Metro.co.uk": 'Left',
-    "Metro": 'Left',
-    "The Independent": 'Left',
-    "Wales Online": 'Left',
-    "The Observer": 'Slight Left',
-    "Sky News": 'Center',
-    "Sky.com": 'Center',
-    "The Financial Times": 'Center',
-    "Financial Times": 'Center',
-    "BBC News": 'Center',
-    "The Times": 'Slight Right',
-    "The Sunday Times": 'Slight Right',
-    "The Telegraph": 'Right',
-    "Telegraph.co.uk": 'Right',
-    "The Sun": 'Right',
-    "The Daily Express": 'Right',
-    "Express": 'Right',
-    "Express.co.uk": 'Right',
-    "Daily Mail": 'Far Right',
-    "The Daily Mail": 'Far Right',
-}
-
-async function toggle(toggleID){
-    let toggle = document.getElementById('toggle' + toggleID);
-    console.log('toggle' + toggleID + ': ' + toggle.checked);
-}
-
-async function loadPage(size, country, source){
+async function loadPage(size, source, sources){
 
     let d = new Date();
-    let time = d.getHours() + '.' + d.getMinutes() + '.' + d.getSeconds();
+    let time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
     let date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
 
     let news = {
@@ -162,9 +170,9 @@ async function loadPage(size, country, source){
     }
 
     if(source == 0){
-        news = await getTopNews(size, country);
+        news = await getTopNews(size, sources);
     } else if(source == 1){
-        news = await getTopNews2(size, country);
+        news = await getTopNews2(size, sources);
     }
 
     console.log(news);
@@ -196,8 +204,13 @@ async function loadPage(size, country, source){
                 html += '<a target="_blank" href="' + preview.url + '">';
                 html += '<img src="' + preview.image + '" alt="article' + k + 'image" class="image" width="600" height="400">';
                 html += '<div class="desc" style="font-weight: bold; font-size: 14px;">' + preview.title + '</div>';
-                html += '<div class="desc">' + preview.desc + ' (' + preview.time + ')</div>';
-                html += '<div class="desc">Source: ' + preview.source + '<br>';
+                html += '<div class="desc">' + preview.desc;
+                
+                if(preview.time){
+                    html += ' (' + preview.time + ')';
+                }
+
+                html += '</div> <div class="desc">Source: ' + preview.source + '<br>';
 
                 if(preview.source in biasChart){
                     html += '(Known bias: ' + biasChart[preview.source] + ')</div>';
@@ -216,6 +229,23 @@ async function loadPage(size, country, source){
     }
 
     document.getElementById("content").innerHTML = html;    
-    document.getElementById("head").innerHTML += '<p style="font-size: smaller;">Updated:  ' + time + '  ' + date + '</p>';
+    document.getElementById("update-time").innerHTML = '<p style="font-size: smaller;">Updated:  ' + time + '  ' + date + '</p>';
 
+}
+
+async function toggle(){
+
+    let sources = '';
+
+    for(let i = 0; i < 3; i++){
+        let sourceID = 'toggle' + i;
+        let sourcei = document.getElementById(sourceID);
+        if(sourcei.checked){
+            sources = sources.concat(sourceList[sourceID]);
+        }
+    }
+
+    sources = sources.substring(0, sources.length -1);
+
+    loadPage(LIMIT, 0, sources);
 }
