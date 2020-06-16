@@ -6,6 +6,7 @@ const sourceList = {
     'toggle0': "bbc.co.uk,",
     'toggle1': "sky.com,",
     'toggle2': "mirror.co.uk,",
+    'toggle3': "vox.com,",
 }
 
 const topicList = [
@@ -33,6 +34,7 @@ const biasChart = {
     "Metro.co.uk": 'Left',
     "Metro": 'Left',
     "The Independent": 'Left',
+    "Vox": 'Left',
     "Wales Online": 'Left',
     "The Observer": 'Slight Left',
     "Sky News": 'Center',
@@ -54,13 +56,19 @@ const biasChart = {
 
 // Functions to retrieve top news headlines
 
-async function getTopNews(size, sources){
+async function getTopNews(size, sources, sort){
 
     let country = 'gb';
     let url = '';
 
+    if(sort == 'date'){
+        sort = 'publishedAt';
+    } else if(sort == 'relevance'){
+        sort = 'relevancy';
+    }
+
     if(sources.length > 0){
-        url = 'https://newsapi.org/v2/everything?domains=' + sources + '&apiKey=cb527766d5474d5ebcccd51023d032bf&pagesize=' + String(size);
+        url = 'https://newsapi.org/v2/everything?domains=' + sources + '&apiKey=cb527766d5474d5ebcccd51023d032bf&pagesize=' + String(size) + '&sortBy=' + sort;
     } else {
         url = 'https://newsapi.org/v2/top-headlines?apiKey=cb527766d5474d5ebcccd51023d032bf&country=' + country + '&pagesize=' + String(size);
     }
@@ -77,9 +85,16 @@ async function getTopNews(size, sources){
     return result;
 }
 
-async function getTopNews2(limit){ //website.domainName%3A.co.uk
-    let sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
-    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20AND%20' + sources + '&sortBy=discoverDate&sortOrder=DESC&limit=' + String(limit);
+async function getTopNews2(limit, sources, sort){ //website.domainName%3A.co.uk
+
+    if(sort == 'date'){
+        sort = 'discoverDate';
+    } else if(sort == 'relevance'){
+        sort = '_score';
+    }
+
+    sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
+    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20AND%20' + sources + '&sortBy=' + sort + '&sortOrder=DESC&limit=' + String(limit);
     const token = 'sBBqsGXiYgF0Db5OV5tAwypVCIPW_sVl7GCQx0RUezHZZuTSmzmITA0VmFNNAWN0n2pHZrSf1gT2PUujH1YaQA'
     
     let result = await fetch(url, {
@@ -175,13 +190,13 @@ function loadGoogleClient() {
             function(err) { console.error("Error loading GAPI client for API", err); });
 }
 
-function getYTNews() {
+function getYTNews(sort) {
     return gapi.client.youtube.search.list({
       "part": [
         "snippet"
       ],
       "maxResults": 10,
-      "order": "relevance",
+      "order": sort,
       "q": "uk news",
       "regionCode": "GB",
       "type": [
@@ -197,7 +212,7 @@ function getYTNews() {
 
 // Loading webpage dynamically
 
-async function loadPage(size, source, sources){
+async function loadPage(size, source, sources, sort){
 
     gapi.load("client:auth2", function() {
         gapi.auth2.init({client_id: "1021095041577-pvdv7ippee3v4q33v2pt72lojd6dd3mf.apps.googleusercontent.com"});
@@ -212,9 +227,9 @@ async function loadPage(size, source, sources){
     }
 
     if(source == 0){
-        news = await getTopNews(size, sources);
+        news = await getTopNews(size, sources, sort);
     } else if(source == 1){
-        news = await getTopNews2(size, sources);
+        news = await getTopNews2(size, sources, sort);
     }
 
     let html = '';
@@ -280,8 +295,9 @@ async function loadPage(size, source, sources){
 async function toggle(){
 
     let sources = '';
+    let sortOrder = 'relevance';
 
-    for(let i = 0; i < 3; i++){
+    for(let i = 0; i < 4; i++){
         let sourceID = 'toggle' + i;
         let sourcei = document.getElementById(sourceID);
         if(sourcei.checked){
@@ -291,5 +307,19 @@ async function toggle(){
 
     sources = sources.substring(0, sources.length -1);
 
-    loadPage(LIMIT, 0, sources);
+    if(document.getElementById("sort-toggle").checked){
+        document.getElementById("sort-setting").style.color = "#2196F3";
+        document.getElementById("sort-setting").innerHTML = "Sort: Relevance"
+
+    } else {
+        document.getElementById("sort-setting").style.color = "#ccc";
+        document.getElementById("sort-setting").innerHTML = "Sort: Date"
+        sortOrder = 'date';
+    }
+
+    if(document.getElementById("toggleYT").checked){
+        getYTNews(sortOrder);
+    }
+
+    loadPage(LIMIT, 0, sources, sortOrder);
 }

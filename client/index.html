@@ -27,29 +27,48 @@
             <div class="header">
                 <h1>Settings</h1>
                 <div class="settings-cols">
+                    
                     <label class="switch">
-                        <input type="checkbox" id="toggle0" onclick="toggle();" checked>
+                        <input type="checkbox" id="sort-toggle" onclick="toggle();">
+                        <span class="slider"></span>
+                    </label>
+                    <div id="sort-setting" style="color: #ccc;">
+                        Sort: Date
+                    </div>
+
+                    <label class="switch">
+                        <input type="checkbox" id="toggle0" onclick="toggle();">
                         <span class="slider"></span>
                     </label>
                     BBC News
 
                     <label class="switch">
-                        <input type="checkbox" id="toggle1" onclick="toggle();" checked>
+                        <input type="checkbox" id="toggle1" onclick="toggle();">
                         <span class="slider"></span>
                     </label>
                     Sky News
 
                     <label class="switch">
-                        <input type="checkbox" id="toggle2" onclick="toggle();" checked>
+                        <input type="checkbox" id="toggle2" onclick="toggle();">
                         <span class="slider"></span>
                     </label>
                     The Mirror
+
+                    <label class="switch">
+                        <input type="checkbox" id="toggle3" onclick="toggle();">
+                        <span class="slider"></span>
+                    </label>
+                    Vox
+
+                    <label class="switch">
+                        <input type="checkbox" id="toggleYT" onclick="toggle();">
+                        <span class="slider"></span>
+                    </label>
+                    YouTube
                 </div>
             </div>
         </div>
 
-        <button onclick="getYTNews();">execute</button>
-    
         <!-- News Grid -->
         <div id="content"></div>
 
