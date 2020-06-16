@@ -177,23 +177,23 @@ function loadGoogleClient() {
 
 function getYTNews() {
     return gapi.client.youtube.search.list({
-    "part": [
+      "part": [
         "snippet"
-    ],
-    "location": "21.5922529,-158.1147114",
-    "locationRadius": "10mi",
-    "maxResults": 10,
-    "q": "news",
-    "type": [
+      ],
+      "maxResults": 10,
+      "order": "relevance",
+      "q": "uk news",
+      "regionCode": "GB",
+      "type": [
         "video"
-    ]
+      ]
     })
         .then(function(response) {
                 // Handle the results here (response.result has the parsed body).
                 console.log("Response", response.result);
-            },
-            function(err) { console.error("Execute error", err); });
-}
+              },
+              function(err) { console.error("Execute error", err); });
+  }
 
 // Loading webpage dynamically
 
