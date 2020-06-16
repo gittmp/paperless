@@ -1,3 +1,5 @@
+// Data objects
+
 const LIMIT = 25
 
 const sourceList = {
@@ -50,6 +52,8 @@ const biasChart = {
     "The Daily Mail": 'Far Right',
 }
 
+// Functions to retrieve top news headlines
+
 async function getTopNews(size, sources){
 
     let country = 'gb';
@@ -60,8 +64,6 @@ async function getTopNews(size, sources){
     } else {
         url = 'https://newsapi.org/v2/top-headlines?apiKey=cb527766d5474d5ebcccd51023d032bf&country=' + country + '&pagesize=' + String(size);
     }
-
-    console.log(url);
 
     let result = await fetch(url, {
         method: 'GET'
@@ -102,6 +104,8 @@ async function getTopNews2(limit){ //website.domainName%3A.co.uk
     }
 }
 
+// Function which restructures each news article's content
+
 async function getPreview(obj, source){
     let news = {};
 
@@ -139,6 +143,8 @@ async function getPreview(obj, source){
     return news;
 }
 
+// Twitter functions
+
 async function getTwitterTrends(){
 
     let placeID = 1; //Global WOEID
@@ -159,7 +165,43 @@ async function getTwitterTrends(){
     return result;
 } 
 
+// Youtube news functions
+
+function loadGoogleClient() {
+    gapi.auth2.getAuthInstance()
+    gapi.client.setApiKey("AIzaSyDhxewl9PW-PHZuCnZ2udUFUTj1dAsyUE8");
+    return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
+        .then(function() { console.log("GAPI client loaded for API"); },
+            function(err) { console.error("Error loading GAPI client for API", err); });
+}
+
+function getYTNews() {
+    return gapi.client.youtube.search.list({
+    "part": [
+        "snippet"
+    ],
+    "location": "21.5922529,-158.1147114",
+    "locationRadius": "10mi",
+    "maxResults": 10,
+    "q": "news",
+    "type": [
+        "video"
+    ]
+    })
+        .then(function(response) {
+                // Handle the results here (response.result has the parsed body).
+                console.log("Response", response.result);
+            },
+            function(err) { console.error("Execute error", err); });
+}
+
+// Loading webpage dynamically
+
 async function loadPage(size, source, sources){
+
+    gapi.load("client:auth2", function() {
+        gapi.auth2.init({client_id: "1021095041577-pvdv7ippee3v4q33v2pt72lojd6dd3mf.apps.googleusercontent.com"});
+    });
 
     let d = new Date();
     let time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
@@ -175,7 +217,6 @@ async function loadPage(size, source, sources){
         news = await getTopNews2(size, sources);
     }
 
-    console.log(news);
     let html = '';
 
     if(news.status == "ok"){
@@ -231,7 +272,10 @@ async function loadPage(size, source, sources){
     document.getElementById("content").innerHTML = html;    
     document.getElementById("update-time").innerHTML = '<p style="font-size: smaller;">Updated:  ' + time + '  ' + date + '</p>';
 
+    loadGoogleClient();
 }
+
+// Statically refreshes page
 
 async function toggle(){
 

@@ -5,6 +5,7 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Georgia">
         <link rel="stylesheet" href="style.css">
         <script src="index.js"></script>
+        <script src="https://apis.google.com/js/api.js"></script>
 
         <script>
             window.onload = loadPage(25, 0, '');
@@ -22,6 +23,7 @@
                 <p>News from sources across the world wide web, in one place, just for you</p>
                 <div id="update-time"></div>
             </div>
+
             <div class="header">
                 <h1>Settings</h1>
                 <div class="settings-cols">
@@ -45,6 +47,8 @@
                 </div>
             </div>
         </div>
+
+        <button onclick="getYTNews();">execute</button>
     
         <!-- News Grid -->
         <div id="content"></div>
