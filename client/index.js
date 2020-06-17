@@ -1,6 +1,7 @@
 // Data objects
 
-const LIMIT = 25
+const LIMIT = 25;
+const SOURCE = 1;
 
 const sourceList = {
     'toggle0': "bbc.co.uk,",
@@ -94,7 +95,7 @@ async function getTopNews2(limit, sources, sort){ //website.domainName%3A.co.uk
     }
 
     sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
-    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20AND%20' + sources + '&sortBy=' + sort + '&sortOrder=DESC&limit=' + String(limit);
+    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20&sortBy=' + sort + '&sortOrder=DESC&limit=' + String(limit);
     const token = 'sBBqsGXiYgF0Db5OV5tAwypVCIPW_sVl7GCQx0RUezHZZuTSmzmITA0VmFNNAWN0n2pHZrSf1gT2PUujH1YaQA'
     
     let result = await fetch(url, {
@@ -130,20 +131,31 @@ async function getPreview(obj, source){
         news['desc'] = obj.description;
         news['url'] = obj.url;
         news['image'] = obj.urlToImage;
-        // news['time'] = obj.
+
+        if(!news.image){
+            news.image = "newspaper.png";
+        }
+
+        news['time'] = obj.publishedAt;
 
     } else if(source == 1){
 
-        news['source'] = obj.website.name;
+        if(obj.website){
+            news['source'] = obj.website.name;
+        } else {
+            let startIndex = obj.url.indexOf("://") + 3;
+            let endIndex = obj.url.indexOf("/", startIndex);
+            news['source'] = obj.url.substring(startIndex, endIndex);
+        }
         news['title'] = obj.title;
         news['url'] = obj.url;
         news['time'] = obj.discoverDate;
 
         let elems = obj.elements;
-        if(elems.length != 0){
+        if(elems.length != 0 && elems[0].url){
             news['image'] = elems[0].url;
         } else {
-            news['image'] = "";
+            news['image'] = "newspaper.png";
         }
 
         let text = obj.text;
@@ -153,6 +165,19 @@ async function getPreview(obj, source){
         } else {
             news['desc'] = text;
         }
+    } else if(source == 2){
+        news['source'] = obj.snippet.channelTitle + " - YouTube";
+        news['title'] = obj.snippet.title;
+        news['image'] = obj.snippet.thumbnails.medium.url;
+        // news['image'] = "newspaper.png";
+
+        if(!news.image){
+            news.image = "newspaper.png";
+        }
+
+        news['url'] = "https://www.youtube.com/watch?v=" + obj.id.videoId;
+        news['time'] = obj.snippet.publishedAt;
+        news['desc'] = "";
     }
 
     return news;
@@ -182,40 +207,37 @@ async function getTwitterTrends(){
 
 // Youtube news functions
 
-function loadGoogleClient() {
+async function loadGoogleClient() {
     gapi.auth2.getAuthInstance()
-    gapi.client.setApiKey("AIzaSyDhxewl9PW-PHZuCnZ2udUFUTj1dAsyUE8");
+    gapi.client.setApiKey("AIzaSyA8b3eNz5q91T9BLQIM-7tZjzmLvJbiapU");
     return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
 }
 
-function getYTNews(sort) {
-    return gapi.client.youtube.search.list({
+async function getYTNews(size, sort) {
+    let resp = await gapi.client.youtube.search.list({
       "part": [
         "snippet"
       ],
-      "maxResults": 10,
+      "maxResults": size,
       "order": sort,
       "q": "uk news",
       "regionCode": "GB",
       "type": [
         "video"
       ]
-    })
-        .then(function(response) {
-                // Handle the results here (response.result has the parsed body).
-                console.log("Response", response.result);
-              },
-              function(err) { console.error("Execute error", err); });
-  }
+    });
+
+    return resp.result.items;
+}
 
 // Loading webpage dynamically
 
-async function loadPage(size, source, sources, sort){
+async function loadPage(size, source, sources, sort, youtube){
 
     gapi.load("client:auth2", function() {
-        gapi.auth2.init({client_id: "1021095041577-pvdv7ippee3v4q33v2pt72lojd6dd3mf.apps.googleusercontent.com"});
+        gapi.auth2.init({client_id: "570678239195-v0i6t4s4l0epv7spugeae4eudgdfjo60.apps.googleusercontent.com"});
     });
 
     let d = new Date();
@@ -226,11 +248,22 @@ async function loadPage(size, source, sources, sort){
         'status': "error"
     }
 
-    if(source == 0){
-        news = await getTopNews(size, sources, sort);
-    } else if(source == 1){
-        news = await getTopNews2(size, sources, sort);
+    if(sources.length == 0 && youtube){
+        news = await getYTNews(size, sort);
+        source = 2
+    } else {
+        if(source == 0){
+            news = await getTopNews(size, sources, sort);
+        } else if(source == 1){
+            news = await getTopNews2(size, sources, sort);
+        }
+
+        if(youtube){
+            ytNews = await getYTNews(Math.floor(size/4) + 1, sort);
+        }
     }
+
+    let ytNews = {};
 
     let html = '';
 
@@ -253,12 +286,25 @@ async function loadPage(size, source, sources, sort){
 
             for(let j = 0; j < lim; j++){
 
-                let article = news.articles[k];
-                let preview = await getPreview(article, source);
+                let article = {};
+                let preview = {};
+
+                if(k > 3*rowCount && youtube){
+                    article = ytNews[k - 3*rowCount];
+                    preview = await getPreview(article, 2);
+                } else {
+                    if(source == 2){
+                        article = news[k];
+                    } else {
+                        article = news.articles[k];
+                    }
+                    preview = await getPreview(article, source);
+                }
 
                 html += '<div class="articles">';
                 html += '<a target="_blank" href="' + preview.url + '">';
                 html += '<img src="' + preview.image + '" alt="article' + k + 'image" class="image" width="600" height="400">';
+
                 html += '<div class="desc" style="font-weight: bold; font-size: 14px;">' + preview.title + '</div>';
                 html += '<div class="desc">' + preview.desc;
                 
@@ -287,7 +333,7 @@ async function loadPage(size, source, sources, sort){
     document.getElementById("content").innerHTML = html;    
     document.getElementById("update-time").innerHTML = '<p style="font-size: smaller;">Updated:  ' + time + '  ' + date + '</p>';
 
-    loadGoogleClient();
+    await loadGoogleClient();
 }
 
 // Statically refreshes page
@@ -296,6 +342,7 @@ async function toggle(){
 
     let sources = '';
     let sortOrder = 'relevance';
+    let ytBool = false;
 
     for(let i = 0; i < 4; i++){
         let sourceID = 'toggle' + i;
@@ -318,8 +365,8 @@ async function toggle(){
     }
 
     if(document.getElementById("toggleYT").checked){
-        getYTNews(sortOrder);
+        ytBool = true;
     }
 
-    loadPage(LIMIT, 0, sources, sortOrder);
+    loadPage(LIMIT, 0, sources, sortOrder, ytBool);
 }
