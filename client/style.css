@@ -24,16 +24,17 @@ body {
 
 .head-cols {
     display: grid;
-    grid-template-columns: auto 25%;
+    grid-template-columns: auto 20%;
+    padding: 20px
 }
 
 /* Setting sliders */
 
 .settings-cols {
     display: grid;
-    grid-template-columns: 25% auto;
-    grid-gap: 2px;
-    padding: 2px;
+    grid-template-columns: 30px auto;
+    row-gap: 6px;
+    column-gap: 10px;
 }
 
 .switch {

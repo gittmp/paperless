@@ -1,6 +1,5 @@
 // Data objects
-
-const LIMIT = 25;
+const LIMIT = 15;
 const SOURCE = 1;
 
 const sourceList = {
@@ -22,12 +21,13 @@ const topicList = [
 ]
 
 const biasChart = {
-    "HuffPost": 'Far Left',
-    "HuffPost UK": 'Far Left',
-    "Huffington Post": 'Far Left',
-    "Morning Star": 'Far Left',
+    "HuffPost": 'Strong Left',
+    "HuffPost UK": 'Strong Left',
+    "Huffington Post": 'Strong Left',
+    "Morning Star": 'Strong Left',
     "CNN": 'Left',
     "The Guardian": 'Left',
+    "Guardian News": 'Left',
     "The Mirror": 'Left',
     "Daily Mirror": 'Left',
     "Mirror Online": 'Left',
@@ -51,8 +51,8 @@ const biasChart = {
     "The Daily Express": 'Right',
     "Express": 'Right',
     "Express.co.uk": 'Right',
-    "Daily Mail": 'Far Right',
-    "The Daily Mail": 'Far Right',
+    "Daily Mail": 'Strong Right',
+    "The Daily Mail": 'Strong Right',
 }
 
 // Functions to retrieve top news headlines
@@ -166,10 +166,9 @@ async function getPreview(obj, source){
             news['desc'] = text;
         }
     } else if(source == 2){
-        news['source'] = obj.snippet.channelTitle + " - YouTube";
+        news['source'] = obj.snippet.channelTitle;
         news['title'] = obj.snippet.title;
         news['image'] = obj.snippet.thumbnails.medium.url;
-        // news['image'] = "newspaper.png";
 
         if(!news.image){
             news.image = "newspaper.png";
@@ -184,7 +183,7 @@ async function getPreview(obj, source){
 }
 
 // Twitter functions
-
+/* 
 async function getTwitterTrends(){
 
     let placeID = 1; //Global WOEID
@@ -204,15 +203,14 @@ async function getTwitterTrends(){
 
     return result;
 } 
-
+ */
 // Youtube news functions
 
 async function loadGoogleClient() {
     gapi.auth2.getAuthInstance()
     gapi.client.setApiKey("AIzaSyA8b3eNz5q91T9BLQIM-7tZjzmLvJbiapU");
     return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-        .then(function() { console.log("GAPI client loaded for API"); },
-            function(err) { console.error("Error loading GAPI client for API", err); });
+        .then(function(){}, function(err) { console.error("Error loading GAPI client for API", err); });
 }
 
 async function getYTNews(size, sort) {
@@ -229,7 +227,18 @@ async function getYTNews(size, sort) {
       ]
     });
 
-    return resp.result.items;
+    if(resp.status == 200){
+        return {
+            'status': "ok",
+            'articles': resp.result.items
+        }
+    } else {
+        return {
+            'status': "error",
+            'code': resp.status,
+            'message': resp.statusText
+        }
+    }
 }
 
 // Loading webpage dynamically
@@ -243,8 +252,11 @@ async function loadPage(size, source, sources, sort, youtube){
     let d = new Date();
     let time = d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds();
     let date = d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear();
-
+    let html = '';
     let news = {
+        'status': "error"
+    }
+    let ytNews = {
         'status': "error"
     }
 
@@ -259,13 +271,9 @@ async function loadPage(size, source, sources, sort, youtube){
         }
 
         if(youtube){
-            ytNews = await getYTNews(Math.floor(size/4) + 1, sort);
+            ytNews = await getYTNews(Math.floor(size/4) + 3, sort);
         }
     }
-
-    let ytNews = {};
-
-    let html = '';
 
     if(news.status == "ok"){
         let rowCount = Math.floor(size/4);
@@ -289,15 +297,13 @@ async function loadPage(size, source, sources, sort, youtube){
                 let article = {};
                 let preview = {};
 
-                if(k > 3*rowCount && youtube){
-                    article = ytNews[k - 3*rowCount];
+                if(source != 2 && k > 3*rowCount && youtube){
+                    article = ytNews.articles[k - 3*rowCount];
+                    console.log(ytNews.articles);
+                    console.log(article);
                     preview = await getPreview(article, 2);
                 } else {
-                    if(source == 2){
-                        article = news[k];
-                    } else {
-                        article = news.articles[k];
-                    }
+                    article = news.articles[k];
                     preview = await getPreview(article, source);
                 }
 
