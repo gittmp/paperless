@@ -1,6 +1,6 @@
 // Data objects
-const LIMIT = 15;
-const SOURCE = 1;
+const LIMIT = 10;
+const SOURCE = 0;
 
 const sourceList = {
     'toggle0': "bbc.co.uk,",
@@ -296,12 +296,12 @@ async function loadPage(size, source, sources, sort, youtube){
 
                 let article = {};
                 let preview = {};
+                let ytOverlay = false;
 
                 if(source != 2 && k > 3*rowCount && youtube){
                     article = ytNews.articles[k - 3*rowCount];
-                    console.log(ytNews.articles);
-                    console.log(article);
                     preview = await getPreview(article, 2);
+                    ytOverlay = true;
                 } else {
                     article = news.articles[k];
                     preview = await getPreview(article, source);
@@ -309,7 +309,12 @@ async function loadPage(size, source, sources, sort, youtube){
 
                 html += '<div class="articles">';
                 html += '<a target="_blank" href="' + preview.url + '">';
-                html += '<img src="' + preview.image + '" alt="article' + k + 'image" class="image" width="600" height="400">';
+
+                if(ytOverlay || source == 2){
+                    html += '<img src="ytlogo.png" style="background: url(' + preview.image + ') center center white; background-size: cover;" alt="article' + k + 'image" class="image" width="600" height="400" border="0"/>'
+                } else {
+                    html += '<img src="' + preview.image + '" alt="article' + k + 'image" class="image" width="600" height="400">';
+                }
 
                 html += '<div class="desc" style="font-weight: bold; font-size: 14px;">' + preview.title + '</div>';
                 html += '<div class="desc">' + preview.desc;
