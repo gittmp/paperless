@@ -1,5 +1,5 @@
 // Data objects
-const LIMIT = 10;
+const LIMIT = 25;
 const SOURCE = 0;
 
 const sourceList = {
@@ -94,9 +94,11 @@ async function getTopNews2(limit, sources, sort){ //website.domainName%3A.co.uk
         sort = '_score';
     }
 
-    sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
-    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20&sortBy=' + sort + '&sortOrder=DESC&limit=' + String(limit);
-    const token = 'sBBqsGXiYgF0Db5OV5tAwypVCIPW_sVl7GCQx0RUezHZZuTSmzmITA0VmFNNAWN0n2pHZrSf1gT2PUujH1YaQA'
+    // sources = 'website.domainName%3A(%22theguardian.com%22%20OR%20%22bbc.co.uk%22%20OR%20%22mirror.co.uk%22%20OR%20%22huffingtonpost.co.uk%22)';
+    sources = '.co.uk';
+
+    let url = 'https://api.newsriver.io/v2/search?query=language%3Aen%20AND%20website.domainName%3A' + sources + '&sortBy=' + sort + '&sortOrder=DESC&limit=' + String(limit);
+    const token = 'sBBqsGXiYgF0Db5OV5tAwypVCIPW_sVl7GCQx0RUezHZZuTSmzmITA0VmFNNAWN0n2pHZrSf1gT2PUujH1YaQA';
     
     let result = await fetch(url, {
         method: 'GET',
@@ -210,7 +212,7 @@ async function loadGoogleClient() {
     gapi.auth2.getAuthInstance()
     gapi.client.setApiKey("AIzaSyA8b3eNz5q91T9BLQIM-7tZjzmLvJbiapU");
     return gapi.client.load("https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest")
-        .then(function(){}, function(err) { console.error("Error loading GAPI client for API", err); });
+        .then(function(){ console.log("GAPI client loaded"); }, function(err) { console.error("Error loading GAPI client for API", err); });
 }
 
 async function getYTNews(size, sort) {
@@ -379,5 +381,5 @@ async function toggle(){
         ytBool = true;
     }
 
-    loadPage(LIMIT, 0, sources, sortOrder, ytBool);
+    loadPage(LIMIT, SOURCE, sources, sortOrder, ytBool);
 }
